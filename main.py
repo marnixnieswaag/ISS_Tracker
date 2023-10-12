@@ -67,31 +67,81 @@ def submit():
         name = event_names[event]
         state = ('in shadow', 'in sunlight')[sunlit_flag]
 
-        if alt.degrees > 0 and state == 'in sunlight' :
-                if name == 'rise above 30°':
-                    string= f'{ti.astimezone(timezone)}'
-                else:
-                    string= f'{ti.astimezone(timezone)}'
-                    string = string[11:]
-                string_1 = str(name)
-                string_2 = f'Altitude: {alt}'
-                string_3 =f'{az}'
-                string_3 = f'Direction: {degrees_cardinal(int(string_3[:3]))}'
-                string_4 = '°'
-                strings = string[:-13],string_1,(string_2[:-13]+string_4), string_3
+        if state == 'in sunlight' :
+        
+            data_frame = tk.Frame(master=text_frame)
+            b_m_e = ("Begin", "Max", "End")
+            t_d_a = ("Time", "Direction", "Altitude")
+
+            
+            for i, t in enumerate(b_m_e):
+                text_label = tk.Label(
+                    master=data_frame,
+                    text= t
+                    )
+                text_label.grid(row=0, column=1+i, sticky='w')
                 
-                count = 0
-                for s in strings:
-                    text_label = tk.Label(master=text_frame, text=s)
-                    if count == 0:
-                        text_label.config(text=s, font=('Courier 11 bold'))
-                        text_label.pack()
-                    elif count <= 4:
-                        text_label.pack()
+            for i, t in enumerate(t_d_a):
+                text_label = tk.Label(
+                    master=data_frame,
+                    text= t
+                    )
+                text_label.grid(row=1+i, column=0, sticky='w')
+
+            datetime_str = f'{ti.astimezone(timezone)}'
+            formated_datetime_str = datetime_str[:-13]
+            date_str = formated_datetime_str[:10]
+            time_str = formated_datetime_str[11:]
+            string_1 = str(name)
+            string_2 = f'Altitude: {alt}'
+            string_2 = string_2[:-13]
+            string_2 += '°'
+            string_3 =f'{az}'
+            string_3 = f'{degrees_cardinal(int(string_3[:3]))}'
+            #strings = string_1,(string_2[:-13]+string_4), string_3
+                
+
+            date_label = tk.Label(master=data_frame,
+                                  text=date_str
+            )
+            date_label.grid(row=0, column=0, sticky='w')
+
+            for i, event in enumerate(event_names):
+
+                time_label = tk.Label(master=data_frame,
+                                    text=time_str
+                )
+                time_label.grid(row=1, column=1+i, sticky='w')
+            
+                direction_label = tk.Label(master=data_frame,
+                                        text=string_3
+                )
+                direction_label.grid(row=2, column=1+i, sticky='w')
+                
+                altitude_label = tk.Label(master=data_frame,
+                                        text=string_2
+                )
+                altitude_label.grid(row=3, column=1+i, sticky='w')
+
+        
+            
+                data_frame.pack()
+            #count = 0
+
+            #for s in strings:
+                #text_label = tk.Label(master=text_frame, text=s)
+
+                #if count == 0:
+                    #text_label.config(text=s, font=('Courier 11 bold'))
+                    #text_label.pack()
+
+                #elif count <= 4:
+                    #text_label.pack()
                     
-                    else:
-                        None
-                    count += 1
+                #else:
+                    #None
+
+                #count += 1
 
 # Create and configure the main window
 window = tk.Tk()
