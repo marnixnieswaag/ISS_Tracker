@@ -102,30 +102,54 @@ def submit():
                 
 
             date_label = tk.Label(master=data_frame,
-                                  text=date_str
+                                text=date_str
             )
-            date_label.grid(row=0, column=0, sticky='w')
+            date_label.grid(
+                row=0,
+                column=0,
+                sticky='w',
+                padx=5,
+                pady=5,
+            )
 
             for i, event in enumerate(event_names):
 
                 time_label = tk.Label(master=data_frame,
                                     text=time_str
                 )
-                time_label.grid(row=1, column=1+i, sticky='w')
+                time_label.grid(
+                    row=1,
+                    column=1+i,
+                    sticky='w',
+                    padx=5,
+                    pady=5,
+                )
             
                 direction_label = tk.Label(master=data_frame,
                                         text=string_3
                 )
-                direction_label.grid(row=2, column=1+i, sticky='w')
+                direction_label.grid(
+                    row=2,
+                    column=1+i,
+                    sticky='w',
+                    padx=5,
+                    pady=5,
+                )
                 
                 altitude_label = tk.Label(master=data_frame,
                                         text=string_2
                 )
-                altitude_label.grid(row=3, column=1+i, sticky='w')
+                altitude_label.grid(
+                    row=3,
+                    column=1+i,
+                    sticky='w',
+                    padx=5,
+                    pady=5,
+                )
 
         
-            
-                data_frame.pack()
+                
+        data_frame.pack(padx=5, pady=5)
             #count = 0
 
             #for s in strings:
@@ -142,7 +166,7 @@ def submit():
                     #None
 
                 #count += 1
-
+        
 # Create and configure the main window
 window = tk.Tk()
 window.title("ISS Tracker")
