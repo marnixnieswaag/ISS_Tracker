@@ -149,7 +149,7 @@ def submit():
 
         
                 
-        data_frame.pack(padx=5, pady=5)
+    data_frame.pack(padx=5, pady=5)
             #count = 0
 
             #for s in strings:
