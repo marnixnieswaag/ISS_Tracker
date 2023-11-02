@@ -75,14 +75,14 @@ def submit():
         state = ('in shadow', 'in sunlight')[sunlit_flag]
         
         
-        t_d_a_s = ("Time", "Direction", "Altitude", "State")
+        t_d_a_s = ("Time:", "Direction:", "Altitude:")
 
         datetime_str = f'{ti.astimezone(timezone)}'
         formated_datetime_str = datetime_str[:-13]
         date_str = formated_datetime_str[:10]
         time_str = formated_datetime_str[11:]
         string_1 = str(name)
-        string_2 = f'Altitude: {alt}'
+        string_2 = f' {alt}'
         string_2 = string_2[:-13]
         string_2 += '°'
         string_3 =f'{az}'
@@ -119,7 +119,9 @@ def submit():
                     pady=5,
                 )
             info_block.grid(row=x,
-                            column=count)
+                            column=count,
+                            padx=5,
+                            pady=5)
             data_block = tk.Frame(master=data_frame)
 
             event_label = tk.Label(master=data_block,
@@ -161,24 +163,18 @@ def submit():
                 pady=5,
             )
 
-            state_label = tk.Label(master=data_block,
-                                    text=string_4
-            )
-            state_label.grid(
-                row=4,
-                sticky='w',
-                padx=5,
-                pady=5,
-            )
-
             if count <3:
                 data_block.grid(row=x,
-                                column=count
+                                column=count+1,
+                                padx=5,
+                                pady=5
                 )
                 count+=1
             else:
                 data_block.grid(row=x,
-                                column=count
+                                column=count+1,
+                                padx=5,
+                                pady=5
                 )
                 x+=1 
                 count=0
@@ -228,26 +224,19 @@ def submit():
                 pady=5,
             )
 
-            state_label = tk.Label(master=data_block,
-                                    text=string_4
-            )
-            state_label.grid(
-                row=4,
-                sticky='w',
-                padx=5,
-                pady=5,
-            )
-
-            
-
+           
             if count <3:
                 data_block.grid(row=x,
-                                column=count
+                                column=count+1,
+                                padx=5,
+                                pady=5
                 )
                 count+=1
             else:
                 data_block.grid(row=x,
-                                column=count
+                                column=count+1,
+                                padx=5,
+                                pady=5
                 )
                 x+=1 
                 count=0
