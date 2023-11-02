@@ -60,11 +60,15 @@ def submit():
     t1 = ts.now() + timedelta(days=30)
     eph = load('de421.bsp')
     t, events = satellite.find_events(wgs84.latlon(address[0], address[1]), t0, t1, altitude_degrees=30.0)
-    event_names = 'Begin', 'Max', 'End'
+    event_names = 'rise above°', 'Culminate', 'set below 30°'
     sunlit = satellite.at(t).is_sunlit(eph)
+
     count=0
+    x=0
     data_frame = tk.Frame(master=text_frame)
-    for i, ti, event, sunlit_flag in zip(t, events, sunlit):
+
+    
+    for ti, event, sunlit_flag in zip(t, events, sunlit):
         topocentric = difference.at(ti)
         alt, az, dis = topocentric.altaz()
         name = event_names[event]
@@ -86,6 +90,7 @@ def submit():
         string_4 = f'{state}'
         #strings = string_1,(string_2[:-13]+string_4), string_3
 
+        
         if count == 0:
             #Shows the Date + 
             #The words 'Time', 'Direction', 'Altitude' and 'State'
@@ -113,9 +118,73 @@ def submit():
                     padx=5,
                     pady=5,
                 )
-            info_block.pack()
-            count+=1
+            info_block.grid(row=x,
+                            column=count)
+            data_block = tk.Frame(master=data_frame)
+
+            event_label = tk.Label(master=data_block,
+                                    text=string_1)
+
+            event_label.grid(
+                row=0,
+                sticky='w',
+                padx=5,
+                pady=5,
+            )
+            time_label = tk.Label(master=data_block,
+                                text=time_str
+            )
+            time_label.grid(
+                row=1,
+                sticky='w',
+                padx=5,
+                pady=5,
+            )
         
+            direction_label = tk.Label(master=data_block,
+                                    text=string_3
+            )
+            direction_label.grid(
+                row=2,
+                sticky='w',
+                padx=5,
+                pady=5,
+            )
+            
+            altitude_label = tk.Label(master=data_block,
+                                    text=string_2
+            )
+            altitude_label.grid(
+                row=3,
+                sticky='w',
+                padx=5,
+                pady=5,
+            )
+
+            state_label = tk.Label(master=data_block,
+                                    text=string_4
+            )
+            state_label.grid(
+                row=4,
+                sticky='w',
+                padx=5,
+                pady=5,
+            )
+
+            if count <3:
+                data_block.grid(row=x,
+                                column=count
+                )
+                count+=1
+            else:
+                data_block.grid(row=x,
+                                column=count
+                )
+                x+=1 
+                count=0
+                
+            count+=1
+            
         else:
 
             data_block = tk.Frame(master=data_frame)
@@ -171,13 +240,16 @@ def submit():
 
             
 
-            if count <=2:
-                data_block.pack(side='right',
-                                anchor='w') 
+            if count <3:
+                data_block.grid(row=x,
+                                column=count
+                )
                 count+=1
-            else: 
-                data_block.pack(side='bottom',
-                                anchor='w')
+            else:
+                data_block.grid(row=x,
+                                column=count
+                )
+                x+=1 
                 count=0
     
         #count = 0
