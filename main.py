@@ -57,10 +57,10 @@ def submit():
     difference = satellite - wgs84.latlon(address[0], address[1])
     
     t0 = ts.now()
-    t1 = ts.now() + timedelta(days=30)
+    t1 = ts.now() + timedelta(days=1)
     eph = load('de421.bsp')
     t, events = satellite.find_events(wgs84.latlon(address[0], address[1]), t0, t1, altitude_degrees=30.0)
-    event_names = 'rise above°', 'Culminate', 'set below 30°'
+    event_names = 'Begin', 'Max', 'End'
     sunlit = satellite.at(t).is_sunlit(eph)
 
     count=0
@@ -93,7 +93,7 @@ def submit():
         
         if count == 0:
             #Shows the Date + 
-            #The words 'Time', 'Direction', 'Altitude' and 'State'
+            #The words 'Time', 'Direction', 'Altitude'
             info_block = tk.Frame(master=data_frame) 
             date_label = tk.Label(master=info_block,
                             text=date_str
@@ -241,24 +241,9 @@ def submit():
                 x+=1 
                 count=0
     
-        #count = 0
-
-        #for s in strings:
-            #text_label = tk.Label(master=text_frame, text=s)
-
-            #if count == 0:
-                #text_label.config(text=s, font=('Courier 11 bold'))
-                #text_label.pack()
-
-            #elif count <= 4:
-                #text_label.pack()
-                
-            #else:
-                #None
-
-            #count += 1
-
+    
     data_frame.pack(padx=5, pady=5)
+
 # Create and configure the main window
 window = tk.Tk()
 window.title("ISS Tracker")
