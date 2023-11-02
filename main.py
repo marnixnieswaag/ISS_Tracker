@@ -37,6 +37,8 @@ def degrees_cardinal(d):
     ix = round(d / (360. / len(dirs)))
     return dirs[ix % len(dirs)]
 
+
+
 # Function to handle the 'Submit' button click
 def submit():
     global text_label  # Declare text_label as a global variable
@@ -55,54 +57,41 @@ def submit():
     difference = satellite - wgs84.latlon(address[0], address[1])
     
     t0 = ts.now()
-    t1 = ts.now() + timedelta(days=10)
+    t1 = ts.now() + timedelta(days=30)
     eph = load('de421.bsp')
     t, events = satellite.find_events(wgs84.latlon(address[0], address[1]), t0, t1, altitude_degrees=30.0)
-    event_names = 'rise above 30°', 'culminate', 'set below 30°'
+    event_names = 'Begin', 'Max', 'End'
     sunlit = satellite.at(t).is_sunlit(eph)
-    
-    for ti, event, sunlit_flag in zip(t, events, sunlit):
+    count=0
+    data_frame = tk.Frame(master=text_frame)
+    for i, ti, event, sunlit_flag in zip(t, events, sunlit):
         topocentric = difference.at(ti)
         alt, az, dis = topocentric.altaz()
         name = event_names[event]
         state = ('in shadow', 'in sunlight')[sunlit_flag]
-
-        if state == 'in sunlight' :
         
-            data_frame = tk.Frame(master=text_frame)
-            b_m_e = ("Begin", "Max", "End")
-            t_d_a = ("Time", "Direction", "Altitude")
+        
+        t_d_a_s = ("Time", "Direction", "Altitude", "State")
 
-            
-            for i, t in enumerate(b_m_e):
-                text_label = tk.Label(
-                    master=data_frame,
-                    text= t
-                    )
-                text_label.grid(row=0, column=1+i, sticky='w')
-                
-            for i, t in enumerate(t_d_a):
-                text_label = tk.Label(
-                    master=data_frame,
-                    text= t
-                    )
-                text_label.grid(row=1+i, column=0, sticky='w')
+        datetime_str = f'{ti.astimezone(timezone)}'
+        formated_datetime_str = datetime_str[:-13]
+        date_str = formated_datetime_str[:10]
+        time_str = formated_datetime_str[11:]
+        string_1 = str(name)
+        string_2 = f'Altitude: {alt}'
+        string_2 = string_2[:-13]
+        string_2 += '°'
+        string_3 =f'{az}'
+        string_3 = f'{degrees_cardinal(int(string_3[:3]))}'
+        string_4 = f'{state}'
+        #strings = string_1,(string_2[:-13]+string_4), string_3
 
-            datetime_str = f'{ti.astimezone(timezone)}'
-            formated_datetime_str = datetime_str[:-13]
-            date_str = formated_datetime_str[:10]
-            time_str = formated_datetime_str[11:]
-            string_1 = str(name)
-            string_2 = f'Altitude: {alt}'
-            string_2 = string_2[:-13]
-            string_2 += '°'
-            string_3 =f'{az}'
-            string_3 = f'{degrees_cardinal(int(string_3[:3]))}'
-            #strings = string_1,(string_2[:-13]+string_4), string_3
-                
-
-            date_label = tk.Label(master=data_frame,
-                                text=date_str
+        if count == 0:
+            #Shows the Date + 
+            #The words 'Time', 'Direction', 'Altitude' and 'State'
+            info_block = tk.Frame(master=data_frame) 
+            date_label = tk.Label(master=info_block,
+                            text=date_str
             )
             date_label.grid(
                 row=0,
@@ -112,61 +101,103 @@ def submit():
                 pady=5,
             )
 
-            for i, event in enumerate(event_names):
-
-                time_label = tk.Label(master=data_frame,
-                                    text=time_str
-                )
-                time_label.grid(
-                    row=1,
-                    column=1+i,
+            for i, t in enumerate(t_d_a_s):
+                text_label = tk.Label(
+                    master=info_block,
+                    text= t
+                    )
+                text_label.grid(
+                    row=1+i,
+                    column=0,
                     sticky='w',
                     padx=5,
                     pady=5,
                 )
+            info_block.pack()
+            count+=1
+        
+        else:
+
+            data_block = tk.Frame(master=data_frame)
+
+            event_label = tk.Label(master=data_block,
+                                    text=string_1)
+
+            event_label.grid(
+                row=0,
+                sticky='w',
+                padx=5,
+                pady=5,
+            )
+            time_label = tk.Label(master=data_block,
+                                text=time_str
+            )
+            time_label.grid(
+                row=1,
+                sticky='w',
+                padx=5,
+                pady=5,
+            )
+        
+            direction_label = tk.Label(master=data_block,
+                                    text=string_3
+            )
+            direction_label.grid(
+                row=2,
+                sticky='w',
+                padx=5,
+                pady=5,
+            )
             
-                direction_label = tk.Label(master=data_frame,
-                                        text=string_3
-                )
-                direction_label.grid(
-                    row=2,
-                    column=1+i,
-                    sticky='w',
-                    padx=5,
-                    pady=5,
-                )
-                
-                altitude_label = tk.Label(master=data_frame,
-                                        text=string_2
-                )
-                altitude_label.grid(
-                    row=3,
-                    column=1+i,
-                    sticky='w',
-                    padx=5,
-                    pady=5,
-                )
+            altitude_label = tk.Label(master=data_block,
+                                    text=string_2
+            )
+            altitude_label.grid(
+                row=3,
+                sticky='w',
+                padx=5,
+                pady=5,
+            )
 
-        
+            state_label = tk.Label(master=data_block,
+                                    text=string_4
+            )
+            state_label.grid(
+                row=4,
+                sticky='w',
+                padx=5,
+                pady=5,
+            )
+
+            
+
+            if count <=2:
+                data_block.pack(side='right',
+                                anchor='w') 
+                count+=1
+            else: 
+                data_block.pack(side='bottom',
+                                anchor='w')
+                count=0
+    
+        #count = 0
+
+        #for s in strings:
+            #text_label = tk.Label(master=text_frame, text=s)
+
+            #if count == 0:
+                #text_label.config(text=s, font=('Courier 11 bold'))
+                #text_label.pack()
+
+            #elif count <= 4:
+                #text_label.pack()
                 
+            #else:
+                #None
+
+            #count += 1
+
     data_frame.pack(padx=5, pady=5)
-            #count = 0
-
-            #for s in strings:
-                #text_label = tk.Label(master=text_frame, text=s)
-
-                #if count == 0:
-                    #text_label.config(text=s, font=('Courier 11 bold'))
-                    #text_label.pack()
-
-                #elif count <= 4:
-                    #text_label.pack()
-                    
-                #else:
-                    #None
-
-                #count += 1
-        
 # Create and configure the main window
 window = tk.Tk()
 window.title("ISS Tracker")
