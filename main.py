@@ -38,7 +38,6 @@ def degrees_cardinal(d):
     return dirs[ix % len(dirs)]
 
 
-
 # Function to handle the 'Submit' button click
 def submit():
     global text_label  # Declare text_label as a global variable
@@ -65,6 +64,7 @@ def submit():
 
     count=0
     x=0
+    global data_frame
     data_frame = tk.Frame(master=text_frame)
 
     
@@ -86,8 +86,17 @@ def submit():
         string_2 = string_2[:-13]
         string_2 += '°'
         string_3 =f'{az}'
-        string_3 = f'{degrees_cardinal(int(string_3[:3]))}'
+        if 'd' in string_3:
+            string_3 = f'{degrees_cardinal(int(string_3[:2]))}'
+        elif 'de' in string_3:
+            string_3.strip('de')
+            string_3 = f'{degrees_cardinal(int(string_3[:1]))}'
+        else:
+             string_3 = f'{degrees_cardinal(int(string_3[:3]))}'
+        
+        
         string_4 = f'{state}'
+
         #strings = string_1,(string_2[:-13]+string_4), string_3
 
         
@@ -240,10 +249,11 @@ def submit():
                 )
                 x+=1 
                 count=0
-    
-    
+
     data_frame.pack(padx=5, pady=5)
 
+def clear():
+    data_frame.destroy()
 # Create and configure the main window
 window = tk.Tk()
 window.title("ISS Tracker")
@@ -293,11 +303,22 @@ for count, text in enumerate(Labels):
 map_widget.fit_bounding_box((85, -180), (-85, 180))
 
 # Create and configure 'Submit' button
-submit_button = tk.Button(master=button_frame, width=10, height=6, text="Submit", command=submit)
+submit_button = tk.Button(
+    master=button_frame,
+    width=10, height=6,
+    text="Submit",
+    command=submit
+)
 submit_button.pack(side="left")
 
 # Create and configure 'Clear' button
-clear_button = tk.Button(master=button_frame, width=10, height=6, text='Clear')
+clear_button = tk.Button(
+    master=button_frame,
+    width=10,
+    height=6,
+    text='Clear',
+    command=clear
+)
 clear_button.pack(side='left', padx=20)
 
 # Set tile server
