@@ -262,6 +262,8 @@ def submit():
 
 def clear():
     global y
+    for widget in data_frame.winfo_children():
+        widget.destroy()
     data_frame.destroy()
     y-=y
 # Create and configure the main window
