@@ -9,11 +9,11 @@ import pytz
 from skyfield.api import EarthSatellite, wgs84, load
 from timezonefinder import TimezoneFinder
 
-# Constants
+
 ISS_API_URL = "https://api.wheretheiss.at/v1/satellites/25544"
 TLE_API_URL = "https://api.wheretheiss.at/v1/satellites/25544/tles"
-
 y=0
+
 
 # Function to fetch ISS data
 def fetch_iss_data():
@@ -97,12 +97,6 @@ def submit():
                 string_3 = f'{degrees_cardinal(int(string_3[:1]))}'
             else:
                 string_3 = f'{degrees_cardinal(int(string_3[:3]))}'
-            
-            
-            string_4 = f'{state}'
-
-            #strings = string_1,(string_2[:-13]+string_4), string_3
-
             
             if count == 0:
                 #Shows the Date + 
@@ -266,6 +260,7 @@ def clear():
         widget.destroy()
     data_frame.destroy()
     y-=y
+
 # Create and configure the main window
 window = tk.Tk()
 window.title("ISS Tracker")
