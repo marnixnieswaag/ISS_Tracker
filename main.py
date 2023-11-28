@@ -115,7 +115,7 @@ def submit():
         else:
             string_3 = f'{degrees_cardinal(int(string_3[:3]))}'
         
-        #Create GUI
+        #Create Labels that contain the collected data
         if count == 0: 
             info_block = tk.Frame(master=data_frame) 
             date_label = tk.Label(master=info_block,
