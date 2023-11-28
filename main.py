@@ -33,6 +33,7 @@ def update_iss_marker():
     marker.set_position(int(latitude), int(longitude))
     window.after(2000, update_iss_marker)
 
+# Function to convert the Azimuth to a cardinal
 def degrees_cardinal(d):
     dirs = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW',
              'WSW', 'W', 'WNW', 'NW', 'NNW']
@@ -43,23 +44,34 @@ def degrees_cardinal(d):
 # Function to handle the 'Submit' button click
 def submit():
     global y
-    global text_label  # Declare text_label as a global variable
+    global text_label
     global data_frame
     
+
+    #Get location from Entries
     location_str = ", ".join([entry.get() for entry in Entries])
+
+    #Convert location string to coördinates
     address = tkintermapview.convert_address_to_coordinates(location_str)
+
+    #Find time zone 
     tz = TimezoneFinder().timezone_at(lng=address[1], lat=address[0])
     timezone = pytz.timezone(tz)
+
+    #Create timescale
     ts = load.timescale()
     t = ts.now().astimezone(timezone)
     
+    #fetch ISS 'TLE' Data
     tle_data = fetch_tle_data()
     line1 = tle_data["line1"]
     line2 = tle_data["line2"]
 
+    #Instantiate Sattelite Object
     satellite = EarthSatellite(line1, line2, 'ISS (ZARYA)', ts)
     difference = satellite - wgs84.latlon(address[0], address[1])
     
+    #Collect position data of the next 10 days
     t0 = ts.now()
     t1 = ts.now() + timedelta(days=10)
     eph = load('de421.bsp')
@@ -67,19 +79,23 @@ def submit():
     event_names = 'Begin', 'Max', 'End'
     sunlit = satellite.at(t).is_sunlit(eph)
 
+    #create variables 'count' & 'x'. 
+    # these are used to print the ISS observation data in a specific order
     count=0
     x=0
-    
+
+    #Create data_fram, this frame will show the observe data
+    # once the submit button is clicked
     data_frame = tk.Frame(master=text_frame)
 
-    
+    #loop through the collected data
     for ti, event, sunlit_flag, _ in zip(t, events, sunlit, range(9)):
         topocentric = difference.at(ti)
-        alt, az, dis = topocentric.altaz()
+        alt, az = topocentric.altaz()
         name = event_names[event]
         state = ('in shadow', 'in sunlight')[sunlit_flag]
         
-        
+        #Create multiple variables for each iteration
         t_d_a_s = ("Time:", "Direction:", "Altitude:", "State:")
         datetime_str = f'{ti.astimezone(timezone)}'
         formated_datetime_str = datetime_str[:-13]
@@ -99,10 +115,8 @@ def submit():
         else:
             string_3 = f'{degrees_cardinal(int(string_3[:3]))}'
         
-
+        #Create GUI
         if count == 0: 
-            #Shows the Date + 
-            #The words 'Time', 'Direction', 'Altitude'
             info_block = tk.Frame(master=data_frame) 
             date_label = tk.Label(master=info_block,
                             text=date_str
