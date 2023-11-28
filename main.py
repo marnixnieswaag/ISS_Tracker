@@ -3,7 +3,6 @@ import tkinter as tk
 import tkintermapview
 from PIL import Image, ImageTk
 import requests
-from PIL import ImageTk, Image
 from datetime import timedelta
 import pytz
 from skyfield.api import EarthSatellite, wgs84, load
@@ -91,7 +90,7 @@ def submit():
     #loop through the collected data
     for ti, event, sunlit_flag, _ in zip(t, events, sunlit, range(9)):
         topocentric = difference.at(ti)
-        alt, az = topocentric.altaz()
+        alt, az, dis = topocentric.altaz()
         name = event_names[event]
         state = ('in shadow', 'in sunlight')[sunlit_flag]
         
@@ -118,8 +117,10 @@ def submit():
         #Create Labels that contain the collected data
         if count == 0: 
             info_block = tk.Frame(master=data_frame) 
-            date_label = tk.Label(master=info_block,
-                            text=date_str
+            date_label = tk.Label(
+                master=info_block,
+                text=date_str,
+                font=('Helvetica', 10, 'bold'),
             )
             date_label.grid(
                 row=0,
@@ -132,7 +133,8 @@ def submit():
             for i, t in enumerate(t_d_a_s):
                 text_label = tk.Label(
                     master=info_block,
-                    text= t
+                    text= t,
+                    font=('Helvetica', 10, 'bold'),
                     )
                 text_label.grid(
                     row=1+i,
@@ -147,8 +149,12 @@ def submit():
                             pady=5)
             data_block = tk.Frame(master=data_frame)
 
-            event_label = tk.Label(master=data_block,
-                                    text=string_1)
+            event_label = tk.Label(
+                master=data_block,
+                text=string_1,
+                font=('Helvetica', 10, 'bold'),
+            )
+            
 
             event_label.grid(
                 row=0,
@@ -218,8 +224,11 @@ def submit():
 
             data_block = tk.Frame(master=data_frame)
 
-            event_label = tk.Label(master=data_block,
-                                    text=string_1)
+            event_label = tk.Label(
+                master=data_block,
+                text=string_1,
+                font=('Helvetica', 10, 'bold'),
+            )
 
             event_label.grid(
                 row=0,
@@ -283,6 +292,7 @@ def submit():
                 count=0
 
         data_frame.pack(padx=5, pady=5)
+
 
 def clear():
     global y
