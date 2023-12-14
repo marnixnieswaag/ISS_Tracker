@@ -11,8 +11,9 @@ ISS Tracker is a simple application that allows you to track the International S
 
 ## Screenshots
 
-![SISS_MAP](Schermopnamen\ISS_MAP.png)
+![ISS_MAP](images/ISS_MAP.png)
 
-![ISS_OBSERVER_DATA](Schermopnamen\ISS_OBSERVER_DATA.png)
+
+![ISS_OBSERVER_DATA](images/ISS_OBSERVER_DATA.png)
 
 
