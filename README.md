@@ -1,6 +1,10 @@
 # ISS Tracker
 
+
 ISS Tracker is a simple application that allows you to track the International Space Station (ISS)
+
+
+## Screenshots
 
 ![ISS_MAP](images/ISS_MAP.png)
 
